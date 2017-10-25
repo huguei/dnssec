@@ -63,5 +63,5 @@ my $bn_e = Crypt::OpenSSL::Bignum->new_from_decimal(oct("0b" . $exponent));
 my $bn_m = Crypt::OpenSSL::Bignum->new_from_decimal(oct("0b" . $modulus));
 
 my $rsa_pubkey = Crypt::OpenSSL::RSA->new_key_from_parameters($bn_m, $bn_e);
-print $rsa_pubkey->get_public_key_string();
+print $rsa_pubkey->get_public_key_x509_string();
 
