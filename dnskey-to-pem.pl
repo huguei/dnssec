@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # Convert an RSA DNSKEY public key in presentation format (like
-# from a dig output) to a PEM public key format.
+# from a dig output) to a RSA PEM encoded public key format.
 #
 # Use:
 #     dnskey-to-pem.pl [-] <DNSKEY_RR>
@@ -16,6 +16,7 @@
 use strict;
 use warnings;
 
+use bigint;
 use Net::DNS::RR;
 use Crypt::OpenSSL::Bignum;
 use Crypt::OpenSSL::RSA;
@@ -58,9 +59,9 @@ else {
     $modulus = substr($r, $largo_modulo);
 }
 
-my $bn_e = Crypt::OpenSSL::Bignum->new_from_decimal($exponent);
-my $bn_m = Crypt::OpenSSL::Bignum->new_from_decimal($modulus);
+my $bn_e = Crypt::OpenSSL::Bignum->new_from_decimal(oct("0b" . $exponent));
+my $bn_m = Crypt::OpenSSL::Bignum->new_from_decimal(oct("0b" . $modulus));
 
 my $rsa_pubkey = Crypt::OpenSSL::RSA->new_key_from_parameters($bn_m, $bn_e);
-print $rsa_pubkey->get_public_key_x509_string();
+print $rsa_pubkey->get_public_key_string();
 
